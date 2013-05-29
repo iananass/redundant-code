@@ -73,11 +73,8 @@ Combination<LEN> Gen(int index, const Combination<LEN> base[]) {
     int i = 1;
     Combination<LEN> tmp;
     while (index && index < (1 << LEN)) {
-     //   std::cout << "i  = " << i << std::endl;
-        if (index & 1) {
+        if (index & 1)
             tmp = tmp + base[i];
-    //        std::cout << base[i].Print() << "        " << tmp.Print() << std::endl;
-        }
         ++i;
         index >>= 1;
     }

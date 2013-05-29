@@ -44,24 +44,17 @@ int main(int argc, char** argv) {
     }
 
 
-//    std::cout << Gen(2048, base).Print();
-//    return 0;
-
     std::vector <Combination<Combination_len> > all_combinations;
     all_combinations.reserve(Combinations_num);
     for (int i = 0; i < Combinations_num; ++i) {
         Combination<Combination_len> tmp(Gen(i, base));
         all_combinations.push_back(tmp);
-   //     std::cout << i << "= " << tmp.Print() << std::endl;
     }
 
     for (int i = 1; i < Combinations_num; ++i)
         for (int j = i + 1; j < Combinations_num; ++j)
-            if ((all_combinations[i] + all_combinations[j]).Count1() == 4) {
+            if ((all_combinations[i] + all_combinations[j]).Count1() == 6) {
                 std::cout << i << "+" << j << "=" << (all_combinations[i] + all_combinations[j]).Print() << std::endl;
-//                std::cout << all_combinations[i].Print() << std::endl;
-//                std::cout << all_combinations[j].Print() << std::endl;
-                break;
             }
 
 
