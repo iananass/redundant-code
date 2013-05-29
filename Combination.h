@@ -27,6 +27,40 @@ private:
     char m_cmb[LEN];
 };
 
+template <int LEN_FULL, int LEN_GEN>
+void mod(char a[LEN_FULL], char b[LEN_GEN], char c[LEN_GEN - 1]) {
+    char tmp[LEN_FULL];
+    for (int i = 0; i < LEN_FULL; ++i)
+        tmp[i] = a[i];
+    int i = 0;
+    while (i < LEN_FULL - LEN_GEN + 1) {
+        if (tmp[i] == 1) {
+            for (int j = 0; j < LEN_GEN; ++j) {
+                tmp[i + j] ^= b[j];
+            }
+        }
+        ++i;
+    }
+    for (int j = 0; j < (LEN_GEN - 1); ++j)
+        c[j] = tmp[i + j];
+}
+
+template <int LEN_FULL, int LEN_GEN>
+Combination<LEN_FULL> MakeCombinations(int index, char generator[LEN_GEN]) {
+    char tmp[LEN_FULL];
+    for (int i = 0; i < LEN_FULL; ++i)
+        tmp[i] = 0;
+    tmp[index] = 1;
+    char c[LEN_GEN - 1];
+
+    mod<LEN_FULL, LEN_GEN>(tmp, generator, c);
+
+    for (int i = 0; i < (LEN_GEN - 1); ++i)
+        tmp[LEN_FULL - LEN_GEN + 1 + i] = c[i];
+
+    return Combination<LEN_FULL>(tmp);
+}
+
 template <int LEN>
 Combination<LEN>::Combination() {
     for (int i = 0; i < LEN; ++i)
@@ -46,7 +80,7 @@ Combination<LEN>::Combination(char cmb[LEN]) {
 }
 
 template <int LEN>
-        const Combination<LEN> Combination<LEN>::operator=(const Combination& c) {
+const Combination<LEN> Combination<LEN>::operator=(const Combination& c) {
     for (int i = 0; i < LEN; ++i)
         m_cmb[i] = c.m_cmb[i];
     return *this;
