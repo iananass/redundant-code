@@ -21,27 +21,25 @@ const int Generator_len = Combination_len - Information_len + 1;
 char generator[Generator_len] = {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
 int main(int argc, char** argv) {
-    Combination<Combination_len> base[Information_len + 1];
+    Combination base[Information_len];
 
-    for (int i = 1; i < Information_len + 1; ++i) {
-        base[i] = MakeCombinations<Combination_len, Generator_len>(Information_len - i , generator);
+    for (int i = 0; i < Information_len; ++i) {
+        base[i] = MakeCombinations(Information_len - i -1, Combination_len , generator,Generator_len);
     }
 
-
-    std::vector <Combination<Combination_len> > all_combinations;
+    std::vector <Combination> all_combinations;
     all_combinations.reserve(Combinations_num);
     for (int i = 0; i < Combinations_num; ++i) {
-        Combination<Combination_len> tmp(Gen(i, base));
+        Combination tmp(Gen(i, base));
         all_combinations.push_back(tmp);
     }
 
     for (int i = 1; i < Combinations_num; ++i)
         for (int j = i + 1; j < Combinations_num; ++j)
             if ((all_combinations[i] + all_combinations[j]).Count1() == 6) {
-                std::cout << i << "+" << j << "=" << (all_combinations[i] + all_combinations[j]).Print() << std::endl;
+                std::cout << i << "+" << j << "=" << (all_combinations[i] + all_combinations[j]) << std::endl;
             }
 
 
     return 0;
 }
-
