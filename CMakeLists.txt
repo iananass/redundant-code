@@ -8,6 +8,7 @@ set (HEADERS
 	Combination.h)
  
 set (SOURCES 
-	main.cpp) 
+	main.cpp
+    Combination.cpp) 
  
 add_executable (${PROJECT} ${SOURCES})

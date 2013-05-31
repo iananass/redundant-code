@@ -10,13 +10,13 @@
 #include <vector>
 #include <string.h>
 #include <string>
+#include <iomanip>
 #include "Combination.h"
-// generator = {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+// generator = {10001000000100001};
 
-const char* strToGenerator(const char* str)
-{
+const char* strToGenerator(const char* str) {
     char* generator = new char[strlen(str)];
-    int i = 0;
+    u_int64_t i = 0;
     while (*str) {
         if (*str != '0')
             generator[i] = 1;
@@ -28,35 +28,28 @@ const char* strToGenerator(const char* str)
     return generator;
 }
 
-int GetUndetectedErrorsNumber(const std::vector<Combination>& all_combinations, int repetition)
-{
-    int errors_number = 0;
-    for (int i = 0; i < all_combinations.size(); ++i)
-        for (int j = i + 1; j < all_combinations.size(); ++j)
-            if ((all_combinations[i] + all_combinations[j]).Count1() == repetition) {
-                ++errors_number;
-              //  std::cout << repetition << ":  " << i << "+" << j << "= [ " << (all_combinations[i] + all_combinations[j]) << "]" << std::endl;
-            }
-    return errors_number;
-}
-
-long factorial(int n)
-{
-    long fact = 1;
-    for (int i = 1; i <= n; ++i)
+u_int64_t factorial(u_int64_t n) {
+    u_int64_t fact = 1;
+    for (u_int64_t i = 1; i <= n; ++i)
         fact *= i;
     return fact;
 }
 
-int combinationsNumber(int selection_size, int total_count)
-{
-    return factorial(total_count) / (factorial(selection_size) * factorial(total_count - selection_size));
+u_int64_t combinationsNumber(u_int64_t selection_size, u_int64_t total_count) {
+    if (selection_size > (total_count - selection_size))
+        selection_size = (total_count - selection_size);
+    
+    u_int64_t numerator = 1;
+    for (int i = 0; i < selection_size; ++i) {
+        numerator *= total_count;
+        --total_count;
+    }
+    return (numerator / factorial(selection_size));
 }
 
-int main(int argc, char** argv)
-{
-    int Combination_len;
-    int Generator_len;
+int main(int argc, char** argv) {
+    u_int64_t Combination_len;
+    u_int64_t Generator_len;
     const char* generator;
 
     if (argc == 3) {
@@ -73,26 +66,32 @@ int main(int argc, char** argv)
         generator = strToGenerator(raw_generator.c_str());
     }
 
-    int Information_len = Combination_len - Generator_len + 1;
-    int Combinations_num = 1 << (Information_len);
+    u_int64_t Information_len = Combination_len - Generator_len + 1;
+    u_int64_t Combinations_num = 1 << (Information_len);
 
     Combination base[Information_len];
 
-    for (int i = 0; i < Information_len; ++i) {
+    for (u_int64_t i = 0; i < Information_len; ++i) {
         base[i] = MakeBaseCombination(Information_len - i - 1, Combination_len, generator, Generator_len);
-        std::cout << "base[" << i + 1 << "] = " << base[i] << std::endl;
+        //std::cout << "base[" << i + 1 << "] = " << base[i] << std::endl;
     }
 
-    std::vector <Combination> all_combinations;
-    all_combinations.reserve(Combinations_num + 1);
-    for (int i = 0; i < Combinations_num; ++i)
-        all_combinations.push_back(GenerateComplexCombination(i, base));
-    
-    
-    for (int i = 1; i <= Combination_len; ++i) {
-        int undetected_errors = GetUndetectedErrorsNumber(all_combinations, i);
-        std::cout << undetected_errors << std::endl;
+
+    u_int64_t combinationWeightCounter[Combination_len];
+    for (int i = 0; i < Combination_len; ++i)
+        combinationWeightCounter[i] = 0;
+
+    for (u_int64_t i = 0; i < Combinations_num; ++i)
+        ++combinationWeightCounter[GenerateComplexCombination(i, base).Count1() - 1];
+
+
+    std::cout << std::setw(30) << "errCount" << std::setw(30) << "Undetected Errors Count" << std::setw(30) << "Total Errors Count" << std::setw(50) << "Ptobability" << std::endl;
+
+    for (u_int64_t i = 1; i <= Combination_len; ++i) {
+        u_int64_t undetected_errors = combinationWeightCounter[i -1];
+        u_int64_t total_possibly_errors = combinationsNumber(i, Combination_len);
+        std::cout << std::sнеetw(30) << i << std::setw(30) << undetected_errors << std::setw(30) << total_possibly_errors << std::setw(50) << float(undetected_errors) / total_possibly_errors  << std::endl;
     }
-    
+
     return 0;
 }
