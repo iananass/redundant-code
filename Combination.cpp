@@ -1,42 +1,37 @@
 #include "Combination.h"
+#include <iostream>
 
 Combination::Combination()
 : m_cmb(0)
-, m_len(0)
-{
+, m_len(0) {
 }
 
 Combination::Combination(const Combination& c)
 : m_cmb(new char[c.m_len])
-, m_len(c.m_len)
-{
+, m_len(c.m_len) {
     for (int i = 0; i < m_len; ++i)
         m_cmb[i] = c.m_cmb[i];
 }
 
 Combination::Combination(int len)
 : m_cmb(new char[len])
-, m_len(len)
-{
+, m_len(len) {
     for (int i = 0; i < m_len; ++i)
         m_cmb[i] = 0;
 }
 
 Combination::Combination(const char cmb[], int len)
 : m_cmb(new char[len])
-, m_len(len)
-{
+, m_len(len) {
     for (int i = 0; i < m_len; ++i)
         m_cmb[i] = cmb[i];
 }
 
-Combination::~Combination()
-{
+Combination::~Combination() {
     delete m_cmb;
 }
 
-const Combination Combination::operator=(const Combination& c)
-{
+const Combination Combination::operator=(const Combination& c) {
     char* tmp = new char[c.m_len];
     m_len = c.m_len;
     delete m_cmb;
@@ -46,8 +41,7 @@ const Combination Combination::operator=(const Combination& c)
     return *this;
 }
 
-const Combination Combination::operator+(const Combination& c) const
-{
+const Combination Combination::operator+(const Combination& c) const {
     if (m_len != c.m_len)
         std::runtime_error("Combination::operator+.  Arguments dimentions are not equal");
     Combination tmp(c);
@@ -56,14 +50,12 @@ const Combination Combination::operator+(const Combination& c) const
     return tmp;
 }
 
-int Combination::Len() const
-{
+int Combination::Len() const {
     return m_len;
 }
 
-char Combination::Count1() const
-{
-    char cnt = 0;
+int Combination::Count1() const {
+    int cnt = 0;
     for (int i = 0; i < m_len; ++i) {
         if (m_cmb[i] == 1)
             cnt += 1;
@@ -71,28 +63,29 @@ char Combination::Count1() const
     return cnt;
 }
 
-Combination GenerateComplexCombination(int index, const Combination base[])
-{
-    int i = 0;
+Combination GenerateComplexCombination(long index, const Combination base[]) {
+    long i = 0;
+ //   std::cout << " i = " << index << std::endl;
     Combination tmp(base[0].Len());
-    while (index && index < (1 << base[0].Len())) {
-        if (index & 1)
+    while (index ){
+        if (index & 1) {
             tmp = tmp + base[i];
+     //       std::cout << "  +  " << base[i] << std::endl;
+        }
         ++i;
         index >>= 1;
     }
+   // std::cout << tmp << std::endl;
     return tmp;
 }
 
-std::ostream& operator<<(std::ostream& os, const Combination& cmb)
-{
+std::ostream& operator<<(std::ostream& os, const Combination& cmb) {
     for (int i = 0; i < cmb.m_len; ++i)
         os << (int) cmb.m_cmb[i] << "  ";
     return os;
 }
 
-static void mod(const char combination[], int len_full, const char generator[], int len_gen, char c[])
-{
+static void mod(const char combination[], int len_full, const char generator[], int len_gen, char c[]) {
     char tmp_combination[len_full];
     for (int i = 0; i < len_full; ++i)
         tmp_combination[i] = combination[i];
@@ -109,8 +102,7 @@ static void mod(const char combination[], int len_full, const char generator[], 
         c[j] = tmp_combination[i + j];
 }
 
-Combination MakeBaseCombination(int index, int len_full, const char generator[], int len_gen)
-{
+Combination MakeBaseCombination(int index, int len_full, const char generator[], int len_gen) {
     char tmp[len_full];
     for (int i = 0; i < len_full; ++i)
         tmp[i] = 0;

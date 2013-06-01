@@ -85,12 +85,17 @@ int main(int argc, char** argv) {
         ++combinationWeightCounter[GenerateComplexCombination(i, base).Count1() - 1];
 
 
-    std::cout << std::setw(30) << "errCount" << std::setw(30) << "Undetected Errors Count" << std::setw(30) << "Total Errors Count" << std::setw(50) << "Ptobability" << std::endl;
+    
+    const int r1=20;
+    const int r2=20;
+    const int r3=20;
+    const int r4=30;
+    std::cout << std::setw(r1) << "Kratnost Oshibki" << std::setw(r2) << "Neobnarujennix" << std::setw(r3) << "Vsego vozmojno" << std::setw(r4) << "Verojatnost obnarujenija" << std::endl;
 
     for (u_int64_t i = 1; i <= Combination_len; ++i) {
         u_int64_t undetected_errors = combinationWeightCounter[i -1];
         u_int64_t total_possibly_errors = combinationsNumber(i, Combination_len);
-        std::cout << std::sнеetw(30) << i << std::setw(30) << undetected_errors << std::setw(30) << total_possibly_errors << std::setw(50) << float(undetected_errors) / total_possibly_errors  << std::endl;
+        std::cout << std::setw(r1) << i << std::setw(r2) << undetected_errors << std::setw(r3) << total_possibly_errors << std::setw(r4) << 1- float(undetected_errors) / total_possibly_errors  << std::endl;
     }
 
     return 0;

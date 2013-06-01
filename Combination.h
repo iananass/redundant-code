@@ -23,7 +23,7 @@ public:
     const Combination operator+(const Combination&) const;
 
     int Len() const;
-    char Count1() const;
+    int Count1() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Combination& cmb);
     int m_len;
@@ -31,6 +31,6 @@ private:
     char *m_cmb;
 };
 
-Combination GenerateComplexCombination(int index, const Combination base[]);
+Combination GenerateComplexCombination(long index, const Combination base[]);
 Combination MakeBaseCombination(int index, int len_full, const char generator[], int len_gen);
 #endif	/* COMBINATION_H */
